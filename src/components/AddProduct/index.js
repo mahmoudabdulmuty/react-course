@@ -13,20 +13,20 @@ function AddProduct(props) {
 		>
 			<input
 				type="text"
-				id="title"
+				name="title"
 				placeholder="Enter Title"
 				onChange={props.handleChange}
 			/>
 			<input
 				type="text"
 				placeholder="Enter Desc"
-				id="desc"
+				name="desc"
 				onChange={props.handleChange}
 			/>
 			<input
 				type="number"
 				placeholder="Enter Price"
-				id="price"
+				name="price"
 				onChange={props.handleChange}
 			/>
 			<input type="submit" value="Add Product" />
