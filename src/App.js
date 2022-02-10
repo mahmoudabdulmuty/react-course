@@ -10,8 +10,9 @@ import { data } from './data';
 
 function App() {
 	const [products, setProducts] = useState(
-		JSON.parse(localStorage.getItem('products')) || data
+		() => JSON.parse(localStorage.getItem('products')) || data
 	);
+	const [filteredProducts, setFilteredProducts] = useState([]);
 	const [formData, setFormData] = useState({
 		title: '',
 		price: '',
@@ -22,6 +23,10 @@ function App() {
 		max: 2000,
 		range: ''
 	});
+
+	useEffect(() => {
+		localStorage.setItem('products', JSON.stringify(products));
+	}, [products]);
 
 	const handleChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -45,31 +50,28 @@ function App() {
 	};
 
 	const handleChangeFilter = (e) => {
-		if (e.target.value === 'all') setProducts(data);
+		if (e.target.value === 'all') setFilteredProducts([]);
 		else {
-			setProducts(data.filter((p) => p.price === +e.target.value));
+			setFilteredProducts(
+				products.filter((product) => product.price === +e.target.value)
+			);
 		}
 	};
 
 	const handleRange = (e) => {
-		setProducts(data.filter((p) => p.price <= +e.target.value));
-		setValue({
-			min: 200,
-			range: e.target.value,
-			max: 2000
-		});
+		setFilteredProducts(
+			products.filter((product) => product.price <= Number(e.target.value))
+		);
+		setValue({ ...value, range: e.target.value });
 	};
 	const handleNameChange = (e) => {
-		setProducts(
-			data.filter((p) =>
+		setFilteredProducts(
+			products.filter((p) =>
 				p.title.toLowerCase().includes(e.target.value.toLowerCase())
 			)
 		);
 	};
-	useEffect(() => {
-		localStorage.setItem('products', JSON.stringify(data));
-	});
-	console.log();
+
 	return (
 		<BrowserRouter>
 			<Header />
@@ -86,6 +88,7 @@ function App() {
 								handleRange={handleRange}
 								value={value}
 								handleNameChange={handleNameChange}
+								filteredProducts={filteredProducts}
 							/>
 						}
 					/>
